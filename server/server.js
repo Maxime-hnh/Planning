@@ -4,8 +4,10 @@ const app = express()
 const cors = require('cors');
 const acl = require('express-acl');
 const sequelize = require('./util/database');
-const users = require('./routes/users');
 const auth = require('./routes/auth');
+const users = require('./routes/users');
+const customers = require('./routes/customers');
+const contracts = require('./routes/contracts');
 
 
 //BODY-PARSER => CHANGE JSON AND URL FOMAT TO JS OBJECT
@@ -35,6 +37,8 @@ acl.config({
 // CRUD ROUTES
 app.use('/api/login', auth)
 app.use('/api/users', users)
+app.use('/api/customers', customers)
+app.use('/api/contracts', contracts)
 
 
 //ERROR HANDLING

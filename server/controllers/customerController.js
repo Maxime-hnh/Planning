@@ -1,46 +1,59 @@
-const Customer = require('../models/customer')
+const Customer = require('../models/customer');
+const httpStatus = require('http-status');
 
 
 // CREATE CUSTOMER
-exports.addCustomer = (req, res, next) => {
-
-    Customer.create(req.body)
-        .then(result => {
-            res.status(201).json({
-                message: 'Client ajouté avec succès.',
-                customer: result
+const addCustomer = async (req, res, next) => {
+    try {
+        models.sequelize
+            .transaction(async () => {
+                const customer = await Customer.create(req.body)
+                res.status(httpStatus.OK).json(customer);
             })
-        })
-        .catch(err => console.log('Une erreur est survenue :', err))
-}
-
-// UPDATE CUSTOMER
-
-// DELETE CUSTOMER
-
-// CUSTOMER ID
-exports.customerId = (req, res, next) => {
-    const customerId = req.params.customerId
-    Customer.findByPk(customerId)
-        .then(customer => {
-            if (!customer) {
-                return res.status(404).json({ message: 'Client introuvable.' });
-            }
-            res.status(200).json({ customer: customer })
-        })
-        .catch(err => console.log(err));
+        }
+    catch (error) {
+        next(error);
+    }
 };
 
-
-// ALL CUSTOMERS
-exports.allCustomers = (req, res, next) => {
-    Customer.findAll()
-        .then(customers => {
-            res.status(200).json(customers);
-        })
-        .catch(err => console.log(err));
+// UPDATE CUSTOMER
+const updateCustomer = async (req, res, next) => {
+    const { body } = req;
+    const customerId = req.params.customerId
+    try {
+        const customer = await models.Event.findByPk(customerId)   
+        if (!customer) {
+            res.status(httpStatus.NOT_FOUND).send();
+        } else {
+            customer.set(body);
+            await customer.save()
+            res.status(httpStatus.OK).json(customer);
+        }
+    } catch (error) {
+        next(error);
+    }
 }
 
+// DELETE CUSTOMER
+const deleteCustomer = async (req, res, next) => {
+    const customerId = req.params.customerId
+    try {
+        const customer = await Customer.findByPk(customerId)
+
+        if (!customer) {
+            res.status(httpStatus.NOT_FOUND).send()
+        } else {
+            await models.sequelize.transaction(async () => {
+                await customer.destroy()
+                res.status(httpStatus.NO_CONTENT).send();
+            })
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+// CUSTOMER ID
 const getCustomerId = async (req, res, next) => {
     const customerId = req.params.customerId
     try {
@@ -55,6 +68,32 @@ const getCustomerId = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
+
+//ALL CUSTOMERS
+const allCustomers = async (req, res, next) => {
+    try {
+        const customers = await Customer.findAll()
+
+        if (customers) {
+            res.status(httpStatus.OK).json(customers)
+        } else {
+            res.status(httpStatus.NOT_FOUND).send()
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = {
+    addCustomer,
+    updateCustomer,
+    deleteCustomer,
+    getCustomerId,
+    allCustomers
+  };
+
+
+
 
 

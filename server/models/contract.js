@@ -47,6 +47,6 @@ const Contract = db.define('contract', {
     }
 });
 
-Contract.belongsTo(Customer, { foreignKey: 'customer_id' });
-
 module.exports = Contract
+
+Contract.belongsTo(Customer, { foreignKey: 'customer_id' });

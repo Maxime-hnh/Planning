@@ -1,6 +1,5 @@
 const {Sequelize, DataTypes} = require('sequelize');
 const db = require('../util/database');
-const Contract = require('./contract')
 
 const Customer = db.define('customer', {
     id : {
@@ -35,13 +34,15 @@ const Customer = db.define('customer', {
     }
 });
 
-Customer.associate = () => {
 
-    Customer.hasMany(Contract, {
+
+module.exports = Customer
+
+const Contract = require('./contract')
+Customer.associate = (models) => {
+
+    Customer.hasOne(models.Contract, {
         foreignKey: 'customer_id',
-        as : 'Contracts',
         required : false
     });
 }
-
-module.exports = Customer
