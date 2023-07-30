@@ -8,6 +8,7 @@ const auth = require('./routes/auth');
 const users = require('./routes/users');
 const customers = require('./routes/customers');
 const contracts = require('./routes/contracts');
+const initAssociations = require('./models/association');
 
 
 //BODY-PARSER => CHANGE JSON AND URL FOMAT TO JS OBJECT
@@ -49,12 +50,13 @@ app.use((error, req, res, next) => {
     res.status(status).json({ message: message });
 });
 
+initAssociations();
 
 //SYNC DATABASE
 sequelize
     .sync()
     .then(result => {
-        console.log("Database connected");
+        console.log("🚀🚀Database connected !🚀🚀");
         app.listen(3000);
     })
-    .catch(err => console.log('Une erreur est survenue', err));
+    .catch(err => console.log('⛔⛔Une erreur est survenue : ', err));

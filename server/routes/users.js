@@ -4,7 +4,7 @@ const auth = require('../middleware/auth');
 const acl = require('express-acl');
 
 
-router.post('/',auth, acl.authorize, userController.signUp.bind(userController))
+router.post('/', userController.signUp.bind(userController))
 router.get('/me', auth, acl.authorize, userController.getMe.bind(userController))
 
 

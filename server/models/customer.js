@@ -1,48 +1,66 @@
-const {Sequelize, DataTypes} = require('sequelize');
-const db = require('../util/database');
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../util/database');
 
-const Customer = db.define('customer', {
-    id : {
-        type : Sequelize.INTEGER,
-        autoIncrement : true,
-        primaryKey : true,
-        allowNull : false
+
+class Customer extends Model { }
+Customer.init({
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
     },
-    firstName : {
-        type : Sequelize.STRING,
-        allowNull : false
+    firstName1: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    lastName : {
-        type : Sequelize.STRING,
-        allowNull : false
+    lastName1: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    phoneNumber : {
-        type : Sequelize.STRING,
-        allowNull : true
+    phoneNumber1: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
-    mail : {
-        type : Sequelize.STRING,
-        allowNull : true
+    mail1: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
-    knownFrom : {
-        type : Sequelize.STRING,
-        allowNull : true
+    firstName2: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    hasApproved : {
-        type : Sequelize.BOOLEAN,
-        allowNull : true
+    lastName2: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    phoneNumber2: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    mail2: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    knownFrom: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    hasApproved: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
+    },
+    opinionAsked: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
     }
+}, {
+    sequelize,
+    modelName: 'customer',
+    freezeTableName: true
 });
 
 
 
-module.exports = Customer
+module.exports = { Customer, sequelize }
 
-const Contract = require('./contract')
-Customer.associate = (models) => {
-
-    Customer.hasOne(models.Contract, {
-        foreignKey: 'customer_id',
-        required : false
-    });
-}

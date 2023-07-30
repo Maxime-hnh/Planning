@@ -1,33 +1,33 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const db = require('../util/database');
+const sequelize = require('../util/database');
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 
-const User = db.define('user', {
+const User = sequelize.define('user', {
     id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
     },
     firstName: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     lastName: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     email: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     password: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     role: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         defaultValue: 'user',
         allowNull: false
     }
@@ -54,4 +54,4 @@ const validate = (user) => {
     return schema.validate(user);
 };
 
-module.exports = { User, validate };
+module.exports = { User, validate, sequelize };

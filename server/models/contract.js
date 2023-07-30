@@ -1,52 +1,75 @@
-const { Sequelize, DataType } = require('sequelize');
-const db = require('../util/database');
-const Customer = require('./customer')
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../util/database');
+const { Customer } = require('./customer');
 
-
-const Contract = db.define('contract', {
+class Contract extends Model { }
+Contract.init({
     id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false
     },
-    number: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
     eventType: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: true
     },
-    date: {
-        type: Sequelize.DATEONLY,
+    validateDate: {
+        type: DataTypes.DATEONLY,
         allowNull: true
     },
     total: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: true
     },
     deposit: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    waitingDeposit: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
+    },
+    depositReceived: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
+    },
+    invoiceDepositSent: {
+        type: DataTypes.BOOLEAN,
         allowNull: true
     },
     balance: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    deadlineBalance: {
+        type: DataTypes.DATEONLY,
+        allowNull: true
+    },
+    reminderBalance: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
+    },
+    invoiceBalanceSent: {
+        type: DataTypes.BOOLEAN,
         allowNull: true
     },
     note: {
-        type: Sequelize.TEXT,
+        type: DataTypes.TEXT,
         allowNull: true
     },
-    customer_id: {
-        type: Sequelize.INTEGER,
+    customerId: {
+        type: DataTypes.INTEGER,
         references: {
             model: Customer,
             id: 'id'
         }
     }
+}, {
+    sequelize,
+    modelName: 'contract',
+    freezeTableName: true
 });
 
-module.exports = Contract
+module.exports = { Contract, sequelize }
 
-Contract.belongsTo(Customer, { foreignKey: 'customer_id' });
