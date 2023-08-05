@@ -20,8 +20,9 @@ export const MyTextInput = ({ label, ...props }) => {
                         {...field}
                         {...props}
                     >
-                    </textarea>}
-                {meta.touched && meta.error ? (<div className='help is-danger' style={{ position: 'absolute', margin: '0' }}>{meta.error}</div>) : null}
+                    </textarea>
+                }
+                {meta.touched && meta.error ? (<div className='text-red-700' style={{ position: 'absolute', margin: '0' }}>{meta.error}</div>) : null}
             </div>
         </>
     )

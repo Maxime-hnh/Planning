@@ -10,13 +10,13 @@ export default function NavBar() {
 	const navigation = [
 		{ name: 'Dashboard', to: '/admin/dashboard' },
 		{ name: 'Formulaire', to: '/admin/formulaire' },
-		{ name: 'Planning', to: '/admin/pa' },
-		{ name: 'Liste', to: '/admin/o' },
+		{ name: 'Planning', to: '/admin/planning' },
+		{ name: 'Liste', to: '/admin/liste' },
 	]
 
 	return (
 		<>
-			<Disclosure as="nav" className="bg-gray-800">
+			<Disclosure as="nav" className="bg-gray-800 -z-0">
 				{({ open }) => (
 					<>
 						<div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">

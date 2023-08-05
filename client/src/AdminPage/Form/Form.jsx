@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup';
-import { toast } from "react-toastify";
-import moment from 'moment';
+//import moment from 'moment';
 import { useLocation } from 'react-router';
-import { MyTextInput } from '../Hooks/GenericInput';
-import { MySelect } from '../Hooks/GenericSelect';
-import { UserIcon, CalendarDaysIcon, RocketLaunchIcon, RadioIcon } from '@heroicons/react/24/solid'
-import { Background } from '../Hooks/Background';
-import MyCheckbox from '../Hooks/GenericCheckbox';
+import { MyTextInput } from '../../Components/Hooks/GenericInput';
+import { MySelect } from '../../Components/Hooks/GenericSelect';
+import { UserIcon, CalendarDaysIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/solid'
+import { Background } from '../../Components/Hooks/Background';
+import { toastError, toastInfo } from '../../Components/Hooks/Toast';
 
 export default function FormPage() {
 
@@ -26,10 +25,7 @@ export default function FormPage() {
 
 				<Background />
 				<div className="mx-auto max-w-2xl text-center">
-					<div className='flex items-center justify-center'>
-						<h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Formulaire client</h2>
-						<RocketLaunchIcon className='h-8 w-8 ml-2' />
-					</div>
+					<h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Formulaire client 🚀</h2>
 					<p className="mt-2 text-lg leading-8 text-gray-600">
 						Le premier d'une longue série, alors au travail Steven !
 					</p>
@@ -60,38 +56,34 @@ export default function FormPage() {
 						}
 					}
 					}
-					enableReinitialize={true}
 					validationSchema={Yup.object({
 						firstName1: Yup.string()
-							.max(100, '100 caractères maximum')
 							.required("Veuillez renseigner le prénom."),
-						lasttName1: Yup.string()
-							.max(100, '100 caractères maximum')
+						lastName1: Yup.string()
 							.required("Veuillez renseigner le nom."),
+						email1: Yup.string()
+							.required("Veuillez renseigner l'adresse mail."),
 						phoneNumber1: Yup.string()
 							.max(15, '15 caractères maximum')
 							.required("Veuillez renseigner le numéro de téléphone."),
-						email1: Yup.string()
-							.required("Veuillez renseigner l'adresse mail."),
 						firstName2: Yup.string()
-							.max(100, '100 caractères maximum')
 							.required("Veuillez renseigner le prénom."),
-						lasttName2: Yup.string()
-							.max(100, '100 caractères maximum')
+						lastName2: Yup.string()
 							.required("Veuillez renseigner le nom."),
+						email2: Yup.string()
+							.required("Veuillez renseigner l'adresse mail."),
 						phoneNumber2: Yup.string()
-							.max(15, '15 caractères maximum'),
-						email2: Yup.string(),
+							.max(15, '15 caractères maximum')
+							.required("Veuillez renseigner le numéro de téléphone."),
+
 						knownFrom: Yup.string()
 							.oneOf(
 								[
-									'Facebook',
-									'Instagram',
-									'Youtube',
 									'Bouche à oreil',
-									'Salon',
-									'Evènement',
-
+									'Evènement au chateau',
+									'Facebook',
+									'Mariage.net',
+									'Autre',
 								]),
 						hasApproved: Yup.boolean(),
 						contract: Yup.object({
@@ -127,15 +119,16 @@ export default function FormPage() {
 							if (response.ok) {
 								const data = await response.json()
 								setCustomer(data)
-								console.log(data)
-								toast.success(' Client ajouté !');
+								console.log('Success : ', data)
+								toastInfo(' Client ajouté ! 😁🚀');
 								resetForm()
-							}
+								window.scrollTo({ top: 0, behavior: 'smooth' });
+
+							};
 						} catch (error) {
 							console.log(error)
-							toast.error(error);
-						}
-
+							toastError('😓😓 Une erreur est survenue : ', error);
+						};
 					}}
 				>
 					{formik => (
@@ -169,7 +162,7 @@ export default function FormPage() {
 										label="Email"
 										id="email1"
 										name="email1"
-										type="text"
+										type="email"
 									/>
 								</div>
 								<div>
@@ -177,7 +170,8 @@ export default function FormPage() {
 										label="Téléphone"
 										id="phoneNumber1"
 										name="phoneNumber1"
-										type="text"
+										type="tel"
+										pattern="[0-9]{2}[0-9]{2}[0-9]{2}[0-9]{2}[0-9]{2}"
 									/>
 								</div>
 							</div>
@@ -209,7 +203,7 @@ export default function FormPage() {
 										label="Email"
 										id="email2"
 										name="email2"
-										type="text"
+										type="email"
 									/>
 								</div>
 								<div>
@@ -217,7 +211,8 @@ export default function FormPage() {
 										label="Téléphone"
 										id="phoneNumber2"
 										name="phoneNumber2"
-										type="text"
+										type="tel"
+										pattern="[0-9]{2}[0-9]{2}[0-9]{2}[0-9]{2}[0-9]{2}"
 									/>
 								</div>
 							</div>
@@ -296,14 +291,14 @@ export default function FormPage() {
 									label="Note"
 									id="note"
 									name="note"
-									type="textarea"
+									as="textarea"
 									rows={3}
 								/>
 							</div>
 							{/* END CLIENT*/}
 
 							<div className='flex items-center pt-4 mb-3'>
-								<RadioIcon className="h-8 w-8 pr-2 text-red-700" aria-hidden="true" />
+								<ChatBubbleLeftRightIcon className="h-8 w-8 pr-2 text-red-700" aria-hidden="true" />
 								<h3 className='text-xl font-bold tracking-tight text-gray-900 sm:text-2xl'>Média</h3>
 							</div>
 							<div className="sm:col-span-2 pb-6">
@@ -324,40 +319,52 @@ export default function FormPage() {
 							<div className="sm:col-span-2 border-b border-gray-900/10 pb-8">
 								<h4 className="block text-l font-semibold leading-6 text-gray-900 text-center">Acceptez-vous que vos emails soient utilisés pour de la communication ?</h4>
 								<div className='flex justify-center mt-4'>
-									<MyCheckbox
-										label="Oui"
-										id="hasApproved"
-										name="hasApproved"
-										value={true}
-									/>
-									<MyCheckbox
-										label="Non"
-										id="hasApproved"
-										name="hasApproved"
-										value={false}
-									/>
+									<label className="flex items-center mr-5">
+										<input
+											type="radio"
+											className="h-5 w-5 text-indigo-600 border-gray-300 rounded"
+											name="hasApproved"
+											id="hasApproved"
+											value={true}
+											checked={formik.values.hasApproved === true}
+											onChange={() => formik.setFieldValue('hasApproved', true)}
+										/>
+										<span className="text-sm font-semibold text-gray-900 pl-1">Oui</span>
+									</label>
+									<label className="flex items-center ml-5">
+										<input
+											type="radio"
+											className="h-5 w-5 text-indigo-600 border-gray-300 rounded"
+											name="hasApproved"
+											id="hasApproved"
+											value={false}
+											checked={formik.values.hasApproved === false}
+											onChange={() => formik.setFieldValue('hasApproved', false)}
+										/>
+										<span className="text-sm font-semibold text-gray-900 pl-1">Non</span>
+									</label>
 								</div>
 							</div>
-							<div className='flex justify-center mt-5'>
-							<button
-								type='submit'
-								className=' bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded text-xl mr-4'
-							>
-								Confirmer
-							</button>
-							<button
-								type='submit'
-								className=' bg-red-700 hover:bg-red-900 text-white font-bold py-2 px-4 rounded text-xl'
-							>
-								Annuler
-							</button>
+
+
+							<div className='flex justify-center mt-10'>
+								<button
+									type='submit'
+									className=' bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded text-xl mr-4'
+								>
+									Confirmer
+								</button>
+								<button
+									type='submit'
+									className=' bg-red-700 hover:bg-red-900 text-white font-bold py-2 px-4 rounded text-xl'
+								>
+									Annuler
+								</button>
 							</div>
 						</Form>
 					)}
 				</Formik >
 			</div>
-
-
 		</>
 	)
 }
