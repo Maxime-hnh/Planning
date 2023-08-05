@@ -18,10 +18,6 @@ Contract.init({
         type: DataTypes.DATEONLY,
         allowNull: true
     },
-    total: {
-        type: DataTypes.INTEGER,
-        allowNull: true
-    },
     deposit: {
         type: DataTypes.INTEGER,
         allowNull: true
@@ -42,15 +38,19 @@ Contract.init({
         type: DataTypes.INTEGER,
         allowNull: true
     },
-    deadlineBalance: {
+    total: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    deadlineTotal: {
         type: DataTypes.DATEONLY,
         allowNull: true
     },
-    reminderBalance: {
+    reminderTotal: {
         type: DataTypes.BOOLEAN,
         allowNull: true
     },
-    invoiceBalanceSent: {
+    invoiceTotalSent: {
         type: DataTypes.BOOLEAN,
         allowNull: true
     },
