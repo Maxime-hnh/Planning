@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup';
+import { toast } from "react-toastify";
 import moment from 'moment';
 import { useLocation } from 'react-router';
 import { MyTextInput } from '../Hooks/GenericInput';
@@ -12,9 +13,10 @@ import MyCheckbox from '../Hooks/GenericCheckbox';
 export default function FormPage() {
 
 	const [isLoading, setIsLoading] = useState(false)
+	const [customer, setCustomer] = useState(null)
 
 	const location = useLocation();
-	let { customer } = location.state || {}
+	let { customerId } = location.state || {}
 
 
 
@@ -113,6 +115,26 @@ export default function FormPage() {
 					})}
 					onSubmit={async (values, { resetForm }) => {
 						console.log('Les valeurs : ', values)
+						try {
+							const response = await fetch('http://localhost:3000/api/customers', {
+								method: 'POST',
+								headers: {
+									'Content-type': 'application/json',
+									'x-access-token': '',
+								},
+								body: JSON.stringify(values)
+							});
+							if (response.ok) {
+								const data = await response.json()
+								setCustomer(data)
+								console.log(data)
+								toast.success(' Client ajouté !');
+								resetForm()
+							}
+						} catch (error) {
+							console.log(error)
+							toast.error(error);
+						}
 
 					}}
 				>
@@ -244,29 +266,29 @@ export default function FormPage() {
 							<div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 pb-8">
 								<div>
 									<MyTextInput
-										label="Prix total"
-										id="contract.total"
-										name="contract.total"
-										type="number"
-									/>
-								</div>
-								<div>
-									<MyTextInput
 										label="Acompte"
 										id="contract.deposit"
 										name="contract.deposit"
 										type="number"
 									/>
 								</div>
+								<div>
+									<MyTextInput
+										label="Solde dû"
+										id="contract.balance"
+										name="contract.balance"
+										type="number"
+
+									/>
+								</div>
 							</div>
 							<div className="sm:col-span-2 pb-6">
 								<MyTextInput
-									label="Solde dû"
-									id="contract.balance"
-									name="contract.balance"
+									label="Prix total"
+									id="contract.total"
+									name="contract.total"
 									type="number"
-									value={formik.values.contract.total - formik.values.contract.deposit}
-
+									value={formik.values.contract.deposit + formik.values.contract.balance}
 								/>
 							</div>
 							<div className="sm:col-span-2 border-b border-gray-900/10 pb-8">
@@ -299,22 +321,36 @@ export default function FormPage() {
 								</MySelect>
 							</div>
 
-							<div className="sm:col-span-2 pb-6">
-							<h4 className="block text-l font-semibold leading-6 text-gray-900 text-center">Acceptez-vous que vos emails soient utilisés pour de la communication ?</h4>
+							<div className="sm:col-span-2 border-b border-gray-900/10 pb-8">
+								<h4 className="block text-l font-semibold leading-6 text-gray-900 text-center">Acceptez-vous que vos emails soient utilisés pour de la communication ?</h4>
 								<div className='flex justify-center mt-4'>
-								<MyCheckbox
-									label="Oui"
-									id="hasApproved"
-									name="hasApproved"
-									value={true}
-								/>
-								<MyCheckbox
-									label="Non"
-									id="hasApproved"
-									name="hasApproved"
-									value={false}
-								/>
+									<MyCheckbox
+										label="Oui"
+										id="hasApproved"
+										name="hasApproved"
+										value={true}
+									/>
+									<MyCheckbox
+										label="Non"
+										id="hasApproved"
+										name="hasApproved"
+										value={false}
+									/>
 								</div>
+							</div>
+							<div className='flex justify-center mt-5'>
+							<button
+								type='submit'
+								className=' bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded text-xl mr-4'
+							>
+								Confirmer
+							</button>
+							<button
+								type='submit'
+								className=' bg-red-700 hover:bg-red-900 text-white font-bold py-2 px-4 rounded text-xl'
+							>
+								Annuler
+							</button>
 							</div>
 						</Form>
 					)}

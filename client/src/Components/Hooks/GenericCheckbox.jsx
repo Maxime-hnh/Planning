@@ -6,7 +6,7 @@ const MyCheckbox = ({ label, ...props }) => {
   const errorClass = meta.touched && meta.error ? 'ring-red-700' : 'ring-indigo-600';
 
   return (
-    <div className="mt-2.5 pr-2.5">
+    <div className="mt-2.5 mr-5 ml-5">
       <label htmlFor={props.id} className="flex items-center">
         <input
           type="checkbox"

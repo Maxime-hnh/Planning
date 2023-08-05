@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom'
 export default function NavBar() {
 
 	const navigation = [
-		{ name: 'Dashboard', to: '/admin' },
+		{ name: 'Dashboard', to: '/admin/dashboard' },
 		{ name: 'Formulaire', to: '/admin/formulaire' },
 		{ name: 'Planning', to: '/admin/pa' },
 		{ name: 'Liste', to: '/admin/o' },
