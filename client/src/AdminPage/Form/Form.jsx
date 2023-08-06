@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup';
 //import moment from 'moment';
@@ -8,8 +8,18 @@ import { MySelect } from '../../Components/Hooks/GenericSelect';
 import { UserIcon, CalendarDaysIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/solid'
 import { Background } from '../../Components/Hooks/Background';
 import { toastError, toastInfo } from '../../Components/Hooks/Toast';
+import { gsap } from "gsap";
+
 
 export default function FormPage() {
+
+	const boxRef = useRef()
+	const subTitle = useRef()
+	
+	useLayoutEffect(() => {
+		gsap.fromTo(boxRef.current, {y : -150, opacity : 0}, {y : 0, opacity : 1, duration : 1, ease : 'power4.out'} )
+		gsap.fromTo(subTitle.current, {y : +100, opacity : 0}, {y : 0, opacity : 1, duration : 0.7, delay : 0.3, ease : 'power4.out'})
+	})
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [customer, setCustomer] = useState(null)
@@ -25,8 +35,8 @@ export default function FormPage() {
 
 				<Background />
 				<div className="mx-auto max-w-2xl text-center">
-					<h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Formulaire client 🚀</h2>
-					<p className="mt-2 text-lg leading-8 text-gray-600">
+					<h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl" ref={boxRef}>Formulaire client 🚀</h2>
+					<p className="mt-2 text-lg leading-8 text-gray-600" ref={subTitle}>
 						Le premier d'une longue série, alors au travail Steven !
 					</p>
 				</div>
