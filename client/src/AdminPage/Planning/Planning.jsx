@@ -58,10 +58,10 @@ export default function Planning() {
 	// { field: 'phoneNumber1', headerName: 'Téléphone1', cellRenderer:ColourCellRenderer },
 
 	const [columnDefs, setColumnDefs] = useState([
-		{ field: 'firstName1', filter: true, pinned: 'left', lockPinned: true },
-		{ field: 'lastName1', headerName: 'Nom1' },
-		{ field: 'mail1', headerName: 'Email1' },
-		{ field: 'phoneNumber1', headerName: 'Téléphone1' },
+		{ field: 'firstName1', headerName: 'Prénom1', cellDataType: 'text', filter: true, pinned: 'left', lockPinned: true },
+		{ field: 'lastName1', headerName: 'Nom1', cellDataType: 'text' },
+		{ field: 'mail1', headerName: 'Email1', cellDataType: 'text' },
+		{ field: 'phoneNumber1', headerName: 'Téléphone1', cellDataType: 'text' },
 		{
 			valueSetter: params => {
 				params.data.contracts[0].validateDate = params.newValue;
@@ -69,7 +69,8 @@ export default function Planning() {
 			},
 			headerName: 'Date',
 			valueGetter: 'data.contracts[0].validateDate',
-			cellRenderer: (params) => moment(params.value).format('DD/MM/YYYY')
+			cellRenderer: (params) => moment(params.value).format('DD/MM/YYYY'),
+			cellDataType: 'date'
 		},
 		{
 			valueSetter: params => {
@@ -78,7 +79,8 @@ export default function Planning() {
 			},
 			headerName: 'Solde dû le',
 			valueGetter: 'data.contracts[0].deadlineTotal',
-			cellRenderer: (params) => moment(params.value).format('DD/MM/YYYY')
+			cellRenderer: (params) => moment(params.value).format('DD/MM/YYYY'),
+			cellDataType: 'date'
 		},
 		{
 			valueSetter: params => {
@@ -86,7 +88,8 @@ export default function Planning() {
 				return true;
 			},
 			headerName: 'Acompte',
-			valueGetter: 'data.contracts[0].deposit'
+			valueGetter: 'data.contracts[0].deposit',
+			cellDataType: 'number'
 		},
 		{
 			valueSetter: params => {
@@ -94,7 +97,8 @@ export default function Planning() {
 				return true;
 			},
 			headerName: 'Solde',
-			valueGetter: 'data.contracts[0].balance'
+			valueGetter: 'data.contracts[0].balance',
+			cellDataType: 'number'
 		},
 		{
 			valueSetter: params => {
@@ -102,7 +106,8 @@ export default function Planning() {
 				return true;
 			},
 			headerName: 'Type d\'événement',
-			valueGetter: 'data.contracts[0].eventType'
+			valueGetter: 'data.contracts[0].eventType',
+			cellDataType: 'text'
 		},
 		{
 			valueSetter: params => {
@@ -110,7 +115,8 @@ export default function Planning() {
 				return true;
 			},
 			headerName: 'Note',
-			valueGetter: 'data.contracts[0].note'
+			valueGetter: 'data.contracts[0].note',
+			cellDataType: 'text'
 		},
 		{
 			valueSetter: params => {
@@ -118,7 +124,8 @@ export default function Planning() {
 				return true;
 			},
 			headerName: 'Demande de relance',
-			valueGetter: 'data.contracts[0].reminderTotal'
+			valueGetter: 'data.contracts[0].reminderTotal',
+			cellDataType: 'boolean',
 		},
 		{
 			valueSetter: params => {
@@ -126,15 +133,13 @@ export default function Planning() {
 				return true;
 			},
 			headerName: 'Facture envoyée',
-			valueGetter: 'data.contracts[0].invoiceTotalSent'
+			valueGetter: 'data.contracts[0].invoiceTotalSent',
+			cellDataType: 'boolean',
 		},
 		{
-			valueSetter: params => {
-				params.data.contracts[0].OpinionAsked = params.newValue;
-				return true;
-			},
+			field: 'opinionAsked',
 			headerName: "Demande d'avis",
-			valueGetter: 'data.contracts[0].OpinionAsked'
+			cellDataType: 'boolean',
 		}
 	]);
 
@@ -142,6 +147,22 @@ export default function Planning() {
 		sortable: true,
 		editable: true
 	}), []);
+
+	const gridOptions = {
+		// ... d'autres options de configuration ag-Grid
+
+		getRowStyle: params => {
+			if (params.data.opinionAsked) {
+				return { backgroundColor: '#1e2761', color: 'white' };
+			}
+			if (params.data.contracts[0].invoiceTotalSent) {
+				return { backgroundColor: '#7a2048', color: 'white' };
+			}
+			if (params.data.contracts[0].reminderTotal) {
+				return { backgroundColor: '#408ec6', color: 'white' };
+			}
+		}
+	};
 
 
 	return (
@@ -160,6 +181,7 @@ export default function Planning() {
 					rowSelection='multiple'
 					animateRows={true}
 					onCellValueChanged={onCellValueChanged}
+					gridOptions={gridOptions}
 
 				/>
 			</div>
