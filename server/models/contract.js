@@ -26,11 +26,11 @@ Contract.init({
         type: DataTypes.BOOLEAN,
         allowNull: true
     },
-    depositReceived: {
+    depositReceived: { // 1 IL a reçu L ACOMPTE, colorier en rouge, tableau dispo
         type: DataTypes.BOOLEAN,
         allowNull: true
     },
-    invoiceDepositSent: {
+    invoiceDepositSent: { //2  une fois quil a l'acompte il doit envoyer la facture, une fois que la facture est envoyée il fait un croix sur son tableau
         type: DataTypes.BOOLEAN,
         allowNull: true
     },
@@ -46,11 +46,11 @@ Contract.init({
         type: DataTypes.DATEONLY,
         allowNull: true
     },
-    reminderTotal: {
+    reminderTotal: { // 3 mail relance solde 
         type: DataTypes.BOOLEAN,
         allowNull: true
     },
-    invoiceTotalSent: {
+    invoiceTotalSent: { //4 quand solde reçu, il doit envoyer facture, quand facture envoyée => tableau colonne vert
         type: DataTypes.BOOLEAN,
         allowNull: true
     },

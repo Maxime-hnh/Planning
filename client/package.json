@@ -6,6 +6,8 @@
   "dependencies": {
     "@headlessui/react": "^1.7.16",
     "@heroicons/react": "^2.0.18",
+    "ag-grid-community": "^30.0.6",
+    "ag-grid-react": "^30.0.6",
     "formik": "^2.4.2",
     "gsap": "^3.12.2",
     "moment": "^2.29.4",
