@@ -27,22 +27,30 @@ const updateCustomer = async (req, res, next) => {
     try {
         const customer = await Customer.findByPk(
             customerId,
-            { include: [{ model: Contract }] },
-            { transaction: t }
+            {
+                include: [{ model: Contract, as: 'contracts' }],
+                transaction: t
+            }
         )
         if (!customer) {
             await t.rollback();
             res.status(httpStatus.NOT_FOUND).send();
-        } else {
-            await customer.update(body, { transaction: t });
-            await t.commit();
-            res.status(httpStatus.OK).json(customer);
-        }
+        };
+        customer.set(body);
+        if (body.contracts) {
+            customer.contracts[0].set(body.contracts);
+            await customer.contracts[0].save({ transaction: t });
+        };
+        await customer.save({ transaction: t });
+        await t.commit();
+        res.status(httpStatus.OK).json(customer);
+
     } catch (error) {
         await t.rollback();
         next(error);
     }
-}
+};
+
 
 // DELETE CUSTOMER
 const deleteCustomer = async (req, res, next) => {
@@ -100,7 +108,7 @@ const getHaveApproved = async (req, res, next) => {
 //ALL CUSTOMERS
 const allCustomers = async (req, res, next) => {
     try {
-        const customers = await Customer.findAll({ include: [{ model: Contract }] },
+        const customers = await Customer.findAll({ include: [{ model: Contract, as: 'contracts' }] },
         )
         if (customers) {
             res.status(httpStatus.OK).json(customers)
@@ -112,53 +120,13 @@ const allCustomers = async (req, res, next) => {
     }
 };
 
-//DATA FOR TABLE
-// const dataForTable = async (req, res, next) => {
-//     try {
-//         const customers = await Customer.findAll({ include: [{ model: Contract }] },
-//         )
-//         if (customers) {
-//             const AddProps = customers.map((customer) => {
-//                 return {
-//                     id : customer.id,
-//                     firstName1 : customer.firstName1,
-//                     lastName1 : customer.lastName1,
-//                     mail1: customer.mail1,
-//                     phoneNumber1 : customer.phoneNumber2,
-//                     firstName2 : customer.firstName2,
-//                     lastName2 : customer.lastName2,
-//                     mail2: customer.mail2,
-//                     phoneNumber2 : customer.phoneNumber2,
-//                     OpinionAsked : customer.opinionAsked,
-//                     Date : moment(customer.contracts[0].validateDate).locale('fr').format('DD/MM/YYYY'),
-//                     deadlineTotal : moment(customer.contracts[0].deadlineTotal).locale('fr').format('DD/MM/YYYY'),
-//                     deposit : customer.contracts[0].deposit,
-//                     balance : customer.contracts[0].balance,
-//                     reminderTotal : customer.contracts[0].remiderTotal,
-//                     invoiceTotalSent : customer.contracts[0].invoiceTotalSent,
-//                     eventType : customer.contracts[0].eventType,
-//                     note : customer.contracts[0].note,
-//                     id : customer.contracts[0].id,
-//                     total : customer.contracts[0].total,
-//                     waitingDeposit : customer.contracts[0].waitingDeposit,
-//                 }
-//             })
-//             res.status(httpStatus.OK).json(AddProps)
-//         } else {
-//             res.status(httpStatus.NOT_FOUND).send()
-//         }
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
 module.exports = {
     addCustomer,
     updateCustomer,
     deleteCustomer,
     getCustomerById,
     getHaveApproved,
-    allCustomers
+    allCustomers,
 };
 
 

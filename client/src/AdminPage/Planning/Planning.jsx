@@ -10,8 +10,28 @@ export default function Planning() {
 	const [rowData, setRowData] = useState()
 	const gridRef = useRef()
 
+	useEffect(() => {
+		const getrowsData = async () => {
+			try {
+				const response = await fetch('http://localhost:3000/api/customers/all', {
+					method: 'GET',
+					headers: { 'x-access-token': '' }
+				});
+				if (response.ok) {
+					const data = await response.json()
+					setRowData(data)
+				};
+			} catch (error) {
+				console.log(error)
+			}
+		};
+		getrowsData()
+	}, [])
+
+
 	const onCellValueChanged = useCallback(async (params) => {
 		// Extrait les données de la ligne modifiée
+		console.log(params)
 		const updatedCustomerData = params.data;
 		const customerId = updatedCustomerData.id
 		console.log('id', customerId)
@@ -34,44 +54,6 @@ export default function Planning() {
 		}
 	}, []);
 
-
-	const updateCustomer = async (values) => {
-		try {
-			const response = await fetch(`http://localhost:3000/api/customers/`, {
-				method: 'PUT',
-				headers: {
-					'Content-type': 'application/json',
-					'x-access-token': ''
-				},
-				body: JSON.stringify(values)
-			});
-			if (response.ok) {
-				const data = await response.json()
-				setCustomer(data)
-			}
-		} catch (error) {
-			console.log(error)
-		}
-	};
-
-	useEffect(() => {
-		const getrowsData = async () => {
-			try {
-				const response = await fetch('http://localhost:3000/api/customers/all', {
-					method: 'GET',
-					headers: { 'x-access-token': '' }
-				});
-				if (response.ok) {
-					const data = await response.json()
-					setRowData(data)
-				};
-			} catch (error) {
-				console.log(error)
-			}
-		};
-		getrowsData()
-	}, [])
-
 	// const ColourCellRenderer = props => <span style={{color:'blue'}}>{props.value}</span>;
 	// { field: 'phoneNumber1', headerName: 'Téléphone1', cellRenderer:ColourCellRenderer },
 
@@ -81,23 +63,79 @@ export default function Planning() {
 		{ field: 'mail1', headerName: 'Email1' },
 		{ field: 'phoneNumber1', headerName: 'Téléphone1' },
 		{
+			valueSetter: params => {
+				params.data.contracts[0].validateDate = params.newValue;
+				return true;
+			},
 			headerName: 'Date',
 			valueGetter: 'data.contracts[0].validateDate',
 			cellRenderer: (params) => moment(params.value).format('DD/MM/YYYY')
 		},
 		{
+			valueSetter: params => {
+				params.data.contracts[0].deadlineTotal = params.newValue;
+				return true;
+			},
 			headerName: 'Solde dû le',
 			valueGetter: 'data.contracts[0].deadlineTotal',
 			cellRenderer: (params) => moment(params.value).format('DD/MM/YYYY')
 		},
-		{ headerName: 'Acompte', valueGetter: 'data.contracts[0].deposit' },
-		{ headerName: 'Solde', valueGetter: 'data.contracts[0].balance' },
-		{ headerName: 'Type d\'événement', valueGetter: 'data.contracts[0].eventType' },
-		{ headerName: 'Note', valueGetter: 'data.contracts[0].note' },
-		{ headerName: 'Demande de relance', valueGetter: 'data.contracts[0].reminderTotal' },
-		{ headerName: 'Facture envoyée', valueGetter: 'data.contracts[0].invoiceTotalSent' },
-		{ headerName: "Demande d'avis", valueGetter: 'data.contracts[0].OpinionAsked' },
-
+		{
+			valueSetter: params => {
+				params.data.contracts[0].deposit = params.newValue;
+				return true;
+			},
+			headerName: 'Acompte',
+			valueGetter: 'data.contracts[0].deposit'
+		},
+		{
+			valueSetter: params => {
+				params.data.contracts[0].balance = params.newValue;
+				return true;
+			},
+			headerName: 'Solde',
+			valueGetter: 'data.contracts[0].balance'
+		},
+		{
+			valueSetter: params => {
+				params.data.contracts[0].eventType = params.newValue;
+				return true;
+			},
+			headerName: 'Type d\'événement',
+			valueGetter: 'data.contracts[0].eventType'
+		},
+		{
+			valueSetter: params => {
+				params.data.contracts[0].note = params.newValue;
+				return true;
+			},
+			headerName: 'Note',
+			valueGetter: 'data.contracts[0].note'
+		},
+		{
+			valueSetter: params => {
+				params.data.contracts[0].reminderTotal = params.newValue;
+				return true;
+			},
+			headerName: 'Demande de relance',
+			valueGetter: 'data.contracts[0].reminderTotal'
+		},
+		{
+			valueSetter: params => {
+				params.data.contracts[0].invoiceTotalSent = params.newValue;
+				return true;
+			},
+			headerName: 'Facture envoyée',
+			valueGetter: 'data.contracts[0].invoiceTotalSent'
+		},
+		{
+			valueSetter: params => {
+				params.data.contracts[0].OpinionAsked = params.newValue;
+				return true;
+			},
+			headerName: "Demande d'avis",
+			valueGetter: 'data.contracts[0].OpinionAsked'
+		}
 	]);
 
 	const defaultColDef = useMemo(() => ({
