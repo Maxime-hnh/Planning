@@ -3,7 +3,7 @@ export const Background = () => {
 	return (
 		<>
 			<div
-				className="absolute inset-x-0 top-[4rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[4rem]"
+				className="absolute inset-x-0 top-[18rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[4rem]"
 				aria-hidden="true"
 			>
 				<div

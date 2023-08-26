@@ -1,0 +1,10 @@
+.ag-header-cell-label {
+  justify-content: center !important;
+  text-transform: uppercase;
+}
+
+
+.ag-floating-filter-button {
+
+display: none !important;
+}

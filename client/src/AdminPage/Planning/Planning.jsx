@@ -3,12 +3,14 @@ import { AgGridReact } from 'ag-grid-react';
 import moment from 'moment';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
+import './Planning.css'
 
 export default function Planning() {
 
 	const [customer, setCustomer] = useState(null)
 	const [rowData, setRowData] = useState()
 	const gridRef = useRef()
+
 
 	useEffect(() => {
 		const getrowsData = async () => {
@@ -28,14 +30,205 @@ export default function Planning() {
 		getrowsData()
 	}, [])
 
+	const button = p => {
+		return (
+			<>
+				<button onClick={onDeleteRow}>click me</button>
+			</>
+		)
+	}
 
+	const [columnDefs, setColumnDefs] = useState([
+		{
+			field: 'firstName1',
+			headerName: 'Prénom1',
+			cellDataType: 'text',
+			filter: 'agTextColumnFilter',
+			floatingFilter: true,
+		},
+		{
+			field: 'lastName1',
+			headerName: 'Nom1',
+			cellDataType: 'text',
+			filter: 'agTextColumnFilter',
+			floatingFilter: true
+		},
+		{
+			field: 'mail1',
+			headerName: 'Email1',
+			cellDataType: 'text',
+			filter: 'agTextColumnFilter',
+			floatingFilter: true
+		},
+		{
+			field: 'phoneNumber1',
+			headerName: 'Téléphone1',
+			cellDataType: 'text',
+			filter: 'agTextColumnFilter',
+			floatingFilter: true
+		},
+		{
+			valueSetter: params => {
+				params.data.contracts[0].validateDate = params.newValue;
+				return true;
+			},
+			headerName: 'Date',
+			valueGetter: 'data.contracts[0].validateDate',
+			cellRenderer: (params) => moment(params.value).format('DD/MM/YYYY'),
+			cellDataType: 'date',
+			filter: 'agDateColumnFilter',
+			filterParams: {
+				comparator: function (filterDateValue, cellValue) {
+					const dateMomentFormat = moment(cellValue).format('DD/MM/YYYY');
+					const dateParts = dateMomentFormat.split("/");
+					const cellDate = new Date(Number(dateParts[2]), Number(dateParts[1]) - 1, Number(dateParts[0]));
+					if (filterDateValue.getTime() === cellDate.getTime()) {
+						return 0;
+					}
+		
+					if (cellDate < filterDateValue) {
+						return -1;
+					}
+		
+					if (cellDate > filterDateValue) {
+						return 1;
+					}
+				},
+			},
+			floatingFilter: true,
+			pinned: 'left',
+			lockPinned: true
+		},
+		{
+			valueSetter: params => {
+				params.data.contracts[0].deadlineTotal = params.newValue;
+				return true;
+			},
+			headerName: 'Solde dû le',
+			valueGetter: 'data.contracts[0].deadlineTotal',
+			cellRenderer: (params) => moment(params.value).format('DD/MM/YYYY'),
+			cellDataType: 'date',
+			filter: 'agDateColumnFilter',
+			filterParams: {
+				comparator: function (filterDateValue, cellValue) {
+					const dateMomentFormat = moment(cellValue).format('DD/MM/YYYY');
+					const dateParts = dateMomentFormat.split("/");
+					const cellDate = new Date(Number(dateParts[2]), Number(dateParts[1]) - 1, Number(dateParts[0]));
+					if (filterDateValue.getTime() === cellDate.getTime()) {
+						return 0;
+					}
+		
+					if (cellDate < filterDateValue) {
+						return -1;
+					}
+		
+					if (cellDate > filterDateValue) {
+						return 1;
+					}
+				},
+			},
+			floatingFilter: true,
+		},
+		{
+			valueSetter: params => {
+				const oldDeposit = params.data.contracts[0].deposit;
+				const newDeposit = params.newValue;
+				const oldBalance = params.data.contracts[0].balance;
+
+				params.data.contracts[0].deposit = newDeposit;
+				params.data.contracts[0].balance = oldBalance - (newDeposit - oldDeposit);
+
+				return true;
+			},
+			headerName: 'Acompte',
+			valueGetter: 'data.contracts[0].deposit',
+			cellDataType: 'number',
+			maxWidth : 100
+		},
+		{
+			valueSetter: params => {
+				params.data.contracts[0].balance = params.newValue;
+				return true;
+			},
+			headerName: 'Solde',
+			valueGetter: 'data.contracts[0].balance',
+			cellDataType: 'number',
+			maxWidth : 100
+		},
+		{
+			valueSetter: params => {
+				params.data.contracts[0].eventType = params.newValue;
+				return true;
+			},
+			headerName: 'Type d\'événement',
+			valueGetter: 'data.contracts[0].eventType',
+			cellDataType: 'text',
+			cellEditor: 'agSelectCellEditor',
+			cellEditorParams: {
+				values: ['🎂 Anniversaire', '⛪ Baptême', '💍 Mariage', '🍷 Vin d\'honneur', 'Autre'],
+			},
+			filter: 'agTextColumnFilter',
+			floatingFilter: true,
+		},
+		{
+			valueSetter: params => {
+				params.data.contracts[0].note = params.newValue;
+				return true;
+			},
+			headerName: 'Note',
+			valueGetter: 'data.contracts[0].note',
+			cellDataType: 'text',
+			cellEditor: 'agLargeTextCellEditor',
+			cellEditorPopup: true,
+			maxWidth : 150
+		},
+		{
+			valueSetter: params => {
+				params.data.contracts[0].reminderTotal = params.newValue;
+				return true;
+			},
+			headerName: 'Demande relance',
+			valueGetter: 'data.contracts[0].reminderTotal',
+			cellEditor: 'agSelectCellEditor',
+			cellDataType: 'boolean',
+			maxWidth : 150,
+			cellStyle: { display: 'flex', justifyContent :'center' }
+		},
+		{
+			valueSetter: params => {
+				params.data.contracts[0].invoiceTotalSent = params.newValue;
+				return true;
+			},
+			headerName: 'Facture envoyée',
+			valueGetter: 'data.contracts[0].invoiceTotalSent',
+			cellDataType: 'boolean',
+			maxWidth : 150,
+			cellStyle: { display: 'flex', justifyContent :'center' }
+		},
+		{
+			field: 'opinionAsked',
+			headerName: "Demande d'avis",
+			cellDataType: 'boolean',
+			maxWidth : 150,
+			cellStyle: { display: 'flex', justifyContent :'center' }
+		},
+	]);
+
+
+	const defaultColDef = useMemo(() => ({
+		sortable: true,
+		editable: true,
+		resizable : true,
+		suppressMenu: true,
+		maxWidth : 200,		
+		cellStyle : {textAlign : 'center'}	
+	}), []);
+
+
+	//UPDATING CELL
 	const onCellValueChanged = useCallback(async (params) => {
-		// Extrait les données de la ligne modifiée
-		console.log(params)
 		const updatedCustomerData = params.data;
 		const customerId = updatedCustomerData.id
-		console.log('id', customerId)
-		console.log('data : ', updatedCustomerData)
 		try {
 			const response = await fetch(`http://localhost:3000/api/customers/${customerId}`, {
 				method: 'PUT',
@@ -54,103 +247,31 @@ export default function Planning() {
 		}
 	}, []);
 
-	// const ColourCellRenderer = props => <span style={{color:'blue'}}>{props.value}</span>;
-	// { field: 'phoneNumber1', headerName: 'Téléphone1', cellRenderer:ColourCellRenderer },
+	//DELETE 
+	const onDeleteRow = useCallback(async (params) => {
+		const selectedRowData = params.data;
+		const customerId = selectedRowData.id;
+		try {
+			const response = await fetch(`http://localhost:3000/api/customers/${customerId}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-type': 'application/json',
+				},
+			})
+			if (response.ok) {
+				const data = await response.json();
+				console.log('Suppression effectuée : ', data);
 
-	const [columnDefs, setColumnDefs] = useState([
-		{ field: 'firstName1', headerName: 'Prénom1', cellDataType: 'text', filter: true, pinned: 'left', lockPinned: true },
-		{ field: 'lastName1', headerName: 'Nom1', cellDataType: 'text' },
-		{ field: 'mail1', headerName: 'Email1', cellDataType: 'text' },
-		{ field: 'phoneNumber1', headerName: 'Téléphone1', cellDataType: 'text' },
-		{
-			valueSetter: params => {
-				params.data.contracts[0].validateDate = params.newValue;
-				return true;
-			},
-			headerName: 'Date',
-			valueGetter: 'data.contracts[0].validateDate',
-			cellRenderer: (params) => moment(params.value).format('DD/MM/YYYY'),
-			cellDataType: 'date'
-		},
-		{
-			valueSetter: params => {
-				params.data.contracts[0].deadlineTotal = params.newValue;
-				return true;
-			},
-			headerName: 'Solde dû le',
-			valueGetter: 'data.contracts[0].deadlineTotal',
-			cellRenderer: (params) => moment(params.value).format('DD/MM/YYYY'),
-			cellDataType: 'date'
-		},
-		{
-			valueSetter: params => {
-				params.data.contracts[0].deposit = params.newValue;
-				return true;
-			},
-			headerName: 'Acompte',
-			valueGetter: 'data.contracts[0].deposit',
-			cellDataType: 'number'
-		},
-		{
-			valueSetter: params => {
-				params.data.contracts[0].balance = params.newValue;
-				return true;
-			},
-			headerName: 'Solde',
-			valueGetter: 'data.contracts[0].balance',
-			cellDataType: 'number'
-		},
-		{
-			valueSetter: params => {
-				params.data.contracts[0].eventType = params.newValue;
-				return true;
-			},
-			headerName: 'Type d\'événement',
-			valueGetter: 'data.contracts[0].eventType',
-			cellDataType: 'text'
-		},
-		{
-			valueSetter: params => {
-				params.data.contracts[0].note = params.newValue;
-				return true;
-			},
-			headerName: 'Note',
-			valueGetter: 'data.contracts[0].note',
-			cellDataType: 'text'
-		},
-		{
-			valueSetter: params => {
-				params.data.contracts[0].reminderTotal = params.newValue;
-				return true;
-			},
-			headerName: 'Demande de relance',
-			valueGetter: 'data.contracts[0].reminderTotal',
-			cellDataType: 'boolean',
-		},
-		{
-			valueSetter: params => {
-				params.data.contracts[0].invoiceTotalSent = params.newValue;
-				return true;
-			},
-			headerName: 'Facture envoyée',
-			valueGetter: 'data.contracts[0].invoiceTotalSent',
-			cellDataType: 'boolean',
-		},
-		{
-			field: 'opinionAsked',
-			headerName: "Demande d'avis",
-			cellDataType: 'boolean',
+				setCustomer((prevData) => prevData.filter((customer) => customer.id !== customerId));
+			}
+		} catch (error) {
+			console.log(error);
 		}
-	]);
+	}, []);
 
-	const defaultColDef = useMemo(() => ({
-		sortable: true,
-		editable: true
-	}), []);
 
+	//COLOR CHANGE 
 	const gridOptions = {
-		// ... d'autres options de configuration ag-Grid
-
 		getRowStyle: params => {
 			if (params.data.opinionAsked) {
 				return { backgroundColor: '#1e2761', color: 'white' };
@@ -182,9 +303,8 @@ export default function Planning() {
 					animateRows={true}
 					onCellValueChanged={onCellValueChanged}
 					gridOptions={gridOptions}
-
 				/>
 			</div>
 		</div>
 	)
-}
+};

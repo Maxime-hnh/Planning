@@ -15,10 +15,10 @@ export default function FormPage() {
 
 	const boxRef = useRef()
 	const subTitle = useRef()
-	
+
 	useLayoutEffect(() => {
-		gsap.fromTo(boxRef.current, {y : -150, opacity : 0}, {y : 0, opacity : 1, duration : 1, ease : 'power4.out'} )
-		gsap.fromTo(subTitle.current, {y : +100, opacity : 0}, {y : 0, opacity : 1, duration : 0.7, delay : 0.3, ease : 'power4.out'})
+		gsap.fromTo(boxRef.current, { y: -150, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'power4.out' })
+		gsap.fromTo(subTitle.current, { y: +100, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, delay: 0.3, ease: 'power4.out' })
 	})
 
 	const [isLoading, setIsLoading] = useState(false)
@@ -47,11 +47,11 @@ export default function FormPage() {
 						firstName1: '',
 						lastName1: '',
 						phoneNumber1: '',
-						email1: '',
+						mail1: '',
 						firstName2: '',
 						lastName2: '',
 						phoneNumber2: '',
-						email2: '',
+						mail2: '',
 						knownFrom: '',
 						hasApproved: null,
 						contract: {
@@ -71,19 +71,19 @@ export default function FormPage() {
 							.required("Veuillez renseigner le prénom."),
 						lastName1: Yup.string()
 							.required("Veuillez renseigner le nom."),
-						email1: Yup.string()
+						mail1: Yup.string()
 							.required("Veuillez renseigner l'adresse mail."),
 						phoneNumber1: Yup.string()
-							.max(15, '15 caractères maximum')
+							.max(10, '10 caractères maximum')
 							.required("Veuillez renseigner le numéro de téléphone."),
 						firstName2: Yup.string()
 							.required("Veuillez renseigner le prénom."),
 						lastName2: Yup.string()
 							.required("Veuillez renseigner le nom."),
-						email2: Yup.string()
+						mail2: Yup.string()
 							.required("Veuillez renseigner l'adresse mail."),
 						phoneNumber2: Yup.string()
-							.max(15, '15 caractères maximum')
+							.max(10, '10 caractères maximum')
 							.required("Veuillez renseigner le numéro de téléphone."),
 
 						knownFrom: Yup.string()
@@ -95,18 +95,21 @@ export default function FormPage() {
 									'Mariage.net',
 									'Autre',
 								]),
-						hasApproved: Yup.boolean(),
+						hasApproved: Yup.boolean()
+						.required('Veuillez sélectionner une réponse'),
 						contract: Yup.object({
 							eventType: Yup.string()
 								.oneOf(
 									[
-										'Anniversaire',
-										'Baptême',
-										'Mariage',
-										'Vin d\'honneur',
+										'🎂 Anniversaire',
+										'⛪ Baptême',
+										'💍 Mariage',
+										'🍷 Vin d\'honneur',
 										'Autre',
 									]
-								),
+								)
+								.required('Veuillez sélectionner un type d\'évènement.'),
+
 							validateDate: Yup.date(),
 							total: Yup.number(),
 							deposit: Yup.number(),
@@ -170,8 +173,8 @@ export default function FormPage() {
 								<div>
 									<MyTextInput
 										label="Email"
-										id="email1"
-										name="email1"
+										id="mail1"
+										name="mail1"
 										type="email"
 									/>
 								</div>
@@ -211,8 +214,8 @@ export default function FormPage() {
 								<div>
 									<MyTextInput
 										label="Email"
-										id="email2"
-										name="email2"
+										id="mail2"
+										name="mail2"
 										type="email"
 									/>
 								</div>
@@ -240,10 +243,10 @@ export default function FormPage() {
 									name="contract.eventType"
 								>
 									<option value="">Sélectionnez un type d'évènement</option>
-									<option value="Anniversaire">Anniversaire</option>
-									<option value="Baptême">Baptême</option>
-									<option value="Mariage">Mariage</option>
-									<option value="Vin d'honneur">Vin d'honneur</option>
+									<option value="🎂 Anniversaire">🎂 Anniversaire</option>
+									<option value="⛪ Baptême">⛪ Baptême</option>
+									<option value="💍 Mariage">💍 Mariage</option>
+									<option value="🍷 Vin d'honneur">🍷 Vin d'honneur</option>
 									<option value="Autre">Autre</option>
 								</MySelect>
 
@@ -299,8 +302,8 @@ export default function FormPage() {
 							<div className="sm:col-span-2 border-b border-gray-900/10 pb-8">
 								<MyTextInput
 									label="Note"
-									id="note"
-									name="note"
+									id="contract.note"
+									name="contract.note"
 									as="textarea"
 									rows={3}
 								/>

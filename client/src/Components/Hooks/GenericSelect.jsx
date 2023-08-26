@@ -14,7 +14,7 @@ export const MySelect = ({ label, ...props }) => {
                     {...field}
                     {...props}
                 />
-                {meta.touched && meta.error ? (<p className='help is-danger'>{meta.error}</p>) : null}
+                {meta.touched && meta.error ? (<div className='text-red-700' style={{ position: 'absolute', margin: '0' }}>{meta.error}</div>) : null}
             </div>
         </>
     );
