@@ -3,7 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import moment from 'moment';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
-import './Planning.css'
+import './Liste.css'
 
 export default function Planning() {
 
@@ -72,7 +72,7 @@ export default function Planning() {
 				params.data.contracts[0].validateDate = params.newValue;
 				return true;
 			},
-			headerName: 'Date',
+			headerName: 'Date évènement',
 			valueGetter: 'data.contracts[0].validateDate',
 			cellRenderer: (params) => moment(params.value).format('DD/MM/YYYY'),
 			cellDataType: 'date',
@@ -290,7 +290,7 @@ export default function Planning() {
 
 		<div className="isolate bg-white pt-10" style={{ height: 'calc(100vh - 8.5rem)' }}>
 			<div className="max-w-2xl">
-				<h2 className="text-2xl font-bold pl-6 tracking-tight text-gray-900 sm:text-4xl pb-8">Tableau client 📈</h2>
+				<h2 className="text-2xl font-bold pl-6 tracking-tight text-gray-900 sm:text-4xl pb-8">Liste client 📈</h2>
 			</div>
 
 			<div className='ag-theme-alpine' style={{ height: '100%' }}>
